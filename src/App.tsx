@@ -1,89 +1,90 @@
-import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
+import { 
+  //Authenticated, 
+  GitHubBanner, Refine, WelcomePage } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import {
-  ErrorComponent,
-  ThemedLayoutV2,
-  ThemedSiderV2,
+  //ErrorComponent,
+  //ThemedLayoutV2,
+ // ThemedSiderV2,
   useNotificationProvider,
 } from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
 
-import dataProvider, {
-  GraphQLClient,
-  liveProvider,
-} from "@refinedev/nestjs-query";
+import { authProvider, dataProvider, liveProvider } from "./providers";
+import { Home, ForgotPassword, Login, Register } from "./pages";
+
 import routerBindings, {
-  CatchAllNavigate,
+  // CatchAllNavigate,
   DocumentTitleHandler,
-  NavigateToResource,
+  // NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import { App as AntdApp } from "antd";
-import { createClient } from "graphql-ws";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { authProvider } from "./authProvider";
-import { Header } from "./components/header";
-import { ColorModeContextProvider } from "./contexts/color-mode";
-import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
-import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./pages/categories";
-import { ForgotPassword } from "./pages/forgotPassword";
-import { Login } from "./pages/login";
-import { Register } from "./pages/register";
+//import { createClient } from "graphql-ws";
+import { BrowserRouter, Route, Routes 
+// Outlet, 
+} from "react-router-dom";
+//import { Header } from "./components/header";
+//import { ColorModeContextProvider } from "./contexts/color-mode";
+// import {
+//   BlogPostCreate,
+//   BlogPostEdit,
+//   BlogPostList,
+//   BlogPostShow,
+// } from "./pages/blog-posts";
+// import {
+//   CategoryCreate,
+//   CategoryEdit,
+//   CategoryList,
+//   CategoryShow,
+// } from "./pages/categories";
+// import { ForgotPassword } from "./pages/forgotPassword";
+// import { Login } from "./pages/login";
+// import { Register } from "./pages/register";
 
-const API_URL = "https://api.nestjs-query.refine.dev/graphql";
-const WS_URL = "wss://api.nestjs-query.refine.dev/graphql";
+// const API_URL = "https://api.nestjs-query.refine.dev/graphql";
+// const WS_URL = "wss://api.nestjs-query.refine.dev/graphql";
 
-const gqlClient = new GraphQLClient(API_URL);
-const wsClient = createClient({ url: WS_URL });
+// const gqlClient = new GraphQLClient(API_URL);
+// const wsClient = createClient({ url: WS_URL });
 
 function App() {
   return (
     <BrowserRouter>
       <GitHubBanner />
       <RefineKbarProvider>
-        <ColorModeContextProvider>
           <AntdApp>
             <DevtoolsProvider>
               <Refine
-                dataProvider={dataProvider(gqlClient)}
-                liveProvider={liveProvider(wsClient)}
+                dataProvider={dataProvider}
+                liveProvider={liveProvider}
                 notificationProvider={useNotificationProvider}
                 routerProvider={routerBindings}
                 authProvider={authProvider}
-                resources={[
-                  {
-                    name: "blog_posts",
-                    list: "/blog-posts",
-                    create: "/blog-posts/create",
-                    edit: "/blog-posts/edit/:id",
-                    show: "/blog-posts/show/:id",
-                    meta: {
-                      canDelete: true,
-                    },
-                  },
-                  {
-                    name: "categories",
-                    list: "/categories",
-                    create: "/categories/create",
-                    edit: "/categories/edit/:id",
-                    show: "/categories/show/:id",
-                    meta: {
-                      canDelete: true,
-                    },
-                  },
-                ]}
+              //   resources={[
+              //     {
+              //       name: "blog_posts",
+              //       list: "/blog-posts",
+              //       create: "/blog-posts/create",
+              //       edit: "/blog-posts/edit/:id",
+              //       show: "/blog-posts/show/:id",
+              //       meta: {
+              //         canDelete: true,
+              //       },
+              //     },
+              //     {
+              //       name: "categories",
+              //       list: "/categories",
+              //       create: "/categories/create",
+              //       edit: "/categories/edit/:id",
+              //       show: "/categories/show/:id",
+              //       meta: {
+              //         canDelete: true,
+              //       },
+              //     },
+              //   ]}
                 options={{
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
@@ -91,16 +92,18 @@ function App() {
                   projectId: "9FIXLx-F2NErv-7MSODR",
                   liveMode: "auto",
                 }}
-              >
+               >
                 <Routes>
-                  <Route
+                  <Route index element={<WelcomePage />} />
+                  <Route index element={<Home />} />
+                  {/* <Route
                     element={
                       <Authenticated
                         key="authenticated-inner"
                         fallback={<CatchAllNavigate to="/login" />}
                       >
                         <ThemedLayoutV2
-                          Header={() => <Header sticky />}
+                          //Header={() => <Header sticky />}
                           Sider={(props) => <ThemedSiderV2 {...props} fixed />}
                         >
                           <Outlet />
@@ -108,6 +111,7 @@ function App() {
                       </Authenticated>
                     }
                   >
+                   
                     <Route
                       index
                       element={<NavigateToResource resource="blog_posts" />}
@@ -142,7 +146,7 @@ function App() {
                       path="/forgot-password"
                       element={<ForgotPassword />}
                     />
-                  </Route>
+                  </Route> */}
                 </Routes>
 
                 <RefineKbar />
@@ -152,7 +156,6 @@ function App() {
               <DevtoolsPanel />
             </DevtoolsProvider>
           </AntdApp>
-        </ColorModeContextProvider>
       </RefineKbarProvider>
     </BrowserRouter>
   );
