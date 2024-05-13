@@ -1,6 +1,4 @@
-import { 
-  //Authenticated, 
-  GitHubBanner, Refine, WelcomePage } from "@refinedev/core";
+import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
@@ -16,16 +14,16 @@ import { authProvider, dataProvider, liveProvider } from "./providers";
 import { Home, ForgotPassword, Login, Register } from "./pages";
 
 import routerBindings, {
-  // CatchAllNavigate,
+  CatchAllNavigate,
   DocumentTitleHandler,
   // NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import { App as AntdApp } from "antd";
 //import { createClient } from "graphql-ws";
-import { BrowserRouter, Route, Routes 
-// Outlet, 
-} from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import Layout from "./components/layout";
+import { resources } from "./config/resources";
 //import { Header } from "./components/header";
 //import { ColorModeContextProvider } from "./contexts/color-mode";
 // import {
@@ -63,6 +61,7 @@ function App() {
                 notificationProvider={useNotificationProvider}
                 routerProvider={routerBindings}
                 authProvider={authProvider}
+                resources={resources}  
               //   resources={[
               //     {
               //       name: "blog_posts",
@@ -94,24 +93,34 @@ function App() {
                 }}
                >
                 <Routes>
-                  <Route index element={<WelcomePage />} />
-                  <Route index element={<Home />} />
-                  {/* <Route
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="forgot-password" element={<ForgotPassword />} />
+
+                  <Route
                     element={
-                      <Authenticated
-                        key="authenticated-inner"
-                        fallback={<CatchAllNavigate to="/login" />}
-                      >
-                        <ThemedLayoutV2
+                      <Authenticated key="authenticated-layout" fallback={<CatchAllNavigate to="/login" />} >
+                        <Layout>
+                          <Outlet />
+                        </Layout>
+                      </Authenticated>
+                    }
+                  >
+                    <Route index element={<Home />} />
+                  </Route>
+
+
+                  {/* 
+                   
+
+                   <ThemedLayoutV2
                           //Header={() => <Header sticky />}
                           Sider={(props) => <ThemedSiderV2 {...props} fixed />}
                         >
                           <Outlet />
                         </ThemedLayoutV2>
-                      </Authenticated>
-                    }
-                  >
-                   
+
+
                     <Route
                       index
                       element={<NavigateToResource resource="blog_posts" />}
@@ -140,12 +149,7 @@ function App() {
                       </Authenticated>
                     }
                   >
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route
-                      path="/forgot-password"
-                      element={<ForgotPassword />}
-                    />
+                    
                   </Route> */}
                 </Routes>
 
